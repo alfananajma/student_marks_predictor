@@ -26,22 +26,24 @@ sleep_hours = st.number_input("Sleep Hours per Day", min_value=0.0, max_value=24
 previous_score = st.number_input("Previous Exam Score", min_value=0, max_value=100, value=75, step=1)
 internet_hours = st.number_input("Internet Usage Hours per Day", min_value=0.0, max_value=24.0, value=2.0, step=0.5)
 
-# 4. Prediction Button and Output
-if st.button("Predict Marks"):
     # Organize inputs into a DataFrame to preserve feature names matching the training dataset
-    input_data = pd.DataFrame([{
-        'Study_Hours': study_hours,
-        'Attendance_Percentage': attendance,
-        'Sleep_Hours': sleep_hours,
-        'Previous_Score': previous_score,
-        'Internet_Hours': internet_hours
-    }])
+    # NEW CORRECTED CODE (Paste this)
+if st.button("Predict Marks"):
+    # We pass data as an explicit list of rows [[row1]] and declare columns exactly as trained
+    input_data = pd.DataFrame([[
+        study_hours,
+        attendance,
+        sleep_hours,
+        previous_score,
+        internet_hours
+    ]], columns=['Study_Hours', 'Attendance_Percentage', 'Sleep_Hours', 'Previous_Score', 'Internet_Hours'])
     
     # Make prediction
     prediction = model.predict(input_data)[0]
     
     # Cap the results logically between 0 and 100
-    final_prediction = max(0.0, min(100.0, prediction))
+    final_prediction = max(0.0, min(100.0, float(prediction)))
     
     # Display Result
     st.success(f"### Predicted Marks: {final_prediction:.2f} / 100")
+    
